@@ -1,5 +1,22 @@
 
 
+#' Modified version of dplyr's select that uses string arguments
+s_select = function(.data, ...) {
+  eval.string.dplyr(.data,"select", ...)
+}
+
+
+#' Internal function used by s_filter, s_select etc.
+eval.string.dplyr = function(.data, .fun.name, ...) {
+  args = list(...)
+  args = unlist(args)
+  code = paste0(.fun.name,"(.data,", paste0(args, collapse=","), ")")
+  df = eval(parse(text=code,srcfile=NULL))
+  df  
+}
+
+
+
 #' Get comorbidities for a list of ICD9 codes 
 #' @param icd9 icd9 code
 #' @return data.table of icd9 codes and their comorbities
@@ -51,14 +68,14 @@ getComorbids <- function(icd, icdVer, types=c("Elixhauser","Charlson","CharlsonR
 	#  but still not fixed to provide consisent behavior with data.frame vs data.table
 	if (icdVer=="icd9") {
 		cds = getComorbidsICD9(icd) %>% 
-				icdcoder::s_select(c(icdVer,types)) %>% 
+				s_select(c(icdVer,types)) %>% 
 				data.frame() %>% 
 				dplyr::distinct() %>% 
 				data.table()
 	}
 	if (icdVer=="icd10") {
 		cds = getComorbidsICD10(icd) %>% 
-				icdcoder::s_select(c(icdVer,types)) %>% 
+				s_select(c(icdVer,types)) %>% 
 				data.frame() %>% 
 				dplyr::distinct() %>% 
 				data.table()
@@ -70,19 +87,3 @@ getComorbids <- function(icd, icdVer, types=c("Elixhauser","Charlson","CharlsonR
 
 
 
-
-
-#' Modified version of dplyr's select that uses string arguments
-s_select = function(.data, ...) {
-  eval.string.dplyr(.data,"select", ...)
-}
-
-
-#' Internal function used by s_filter, s_select etc.
-eval.string.dplyr = function(.data, .fun.name, ...) {
-  args = list(...)
-  args = unlist(args)
-  code = paste0(.fun.name,"(.data,", paste0(args, collapse=","), ")")
-  df = eval(parse(text=code,srcfile=NULL))
-  df  
-}
