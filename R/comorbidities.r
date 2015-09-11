@@ -67,3 +67,22 @@ getComorbids <- function(icd, icdVer, types=c("Elixhauser","Charlson","CharlsonR
 	cds
 }
 
+
+
+
+
+
+#' Modified version of dplyr's select that uses string arguments
+s_select = function(.data, ...) {
+  eval.string.dplyr(.data,"select", ...)
+}
+
+
+#' Internal function used by s_filter, s_select etc.
+eval.string.dplyr = function(.data, .fun.name, ...) {
+  args = list(...)
+  args = unlist(args)
+  code = paste0(.fun.name,"(.data,", paste0(args, collapse=","), ")")
+  df = eval(parse(text=code,srcfile=NULL))
+  df  
+}
