@@ -2,13 +2,12 @@ require(dplyr)
 
 
 
-## This calculates data.frames based on the comorbidity information within the 
+## This calculates datasets based on the comorbidity information within the 
 ##  comorbidities.icd10 R package at https://github.com/gforge/comorbidities.icd10
 ## The comorbidities.icd10 uses a nice regex approach, so I borrowed their approach
 ##  in order to calculate the two comorbidity dataset (icdXXComorbidities) included 
 ##  in the icdcoder package
-## This is provided if someone wants to add their own comorbidity definitions to 
-##  calculate the 
+## This is provided if someone wants to add their own comorbidity definitions.
 
 
 ## Pass the code list (see below - the regex definitions), a colName (e.g., "Elixhauser")
